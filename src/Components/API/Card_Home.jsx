@@ -1,0 +1,47 @@
+import React, { useEffect, useState } from 'react'
+
+function Card_Home() {
+    const [apidata, setApidata] = useState([])
+
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization:
+                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNWU0MmZkODA2MjEwZTJlYWIyM2M0NDBmMTQ3YTU4NyIsIm5iZiI6MTc1MTE4MzUxOC40OTUwMDAxLCJzdWIiOiI2ODYwZjA5ZTJiY2JiMDAwNmMzMDNkMTYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.IaHIU4WoKlxEhj41rmkiwr_BY56kQ-Dbf1UrGHPEOMU',
+        },
+    }
+
+    useEffect(() => {
+        fetch('https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1', options)
+            .then((res) => res.json())
+            .then((res) => setApidata(res.results))
+            .catch((err) => console.error(err))
+    }, [])
+
+    return (
+        <div className="w-full px-4 flex flex-col items-start mt-10">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-6">Upcoming</h1>
+
+            <div className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide">
+                {apidata.map((card, index) => (
+                    <div
+                        key={index}
+                        className="shrink-0 w-[140px] sm:w-[160px] md:w-[200px] relative"
+                    >
+                        <img
+                            src={`https://image.tmdb.org/t/p/w500` + card.poster_path}
+                            alt={card.original_title}
+                            className="rounded-md w-full h-[210px] sm:h-[230px] md:h-[250px] object-cover transition-transform duration-300 hover:scale-105"
+                        />
+                        <p className="mt-2 text-white font-semibold text-sm sm:text-base line-clamp-1">
+                            {card.original_title}
+                        </p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export default Card_Home
